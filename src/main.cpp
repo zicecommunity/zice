@@ -3806,7 +3806,8 @@ bool ContextualCheckBlockHeader(
 
     assert(pindexPrev);
 
-    int nHeight = pindexPrev->nHeight+1;
+    long int nHeight = pindexPrev->nHeight+1;
+
 
     // Check proof of work
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
