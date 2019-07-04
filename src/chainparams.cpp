@@ -49,7 +49,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  * database (and is in any case of zero value).
  *
  * >>> from pyblake2 import blake2s
- * >>> 'ZiCE' + blake2s(b'The Economist 2016-10-29 Known unknown: Another crypto-currency is born. BTC#436254 0000000000000000044f321997f336d2908cf8c8d6893e88dbf067e2d949487d ETH#2521903 483039a6b6bd8bd05f0584f9a078d075e454925eb71c1f13eaff59b405a721bb DJIA close on 27 Oct 2016: 18,169.68').hexdigest()
+ * >>> 'ZiCE' + blake2s(b'Skellers is a groovy beast').hexdigest()
  *
  * CBlock(hash=00040fe8, ver=4, hashPrevBlock=00000000000000, hashMerkleRoot=c4eaa5, nTime=1477641360, nBits=1f07ffff, nNonce=4695, vtx=1)
  *   CTransaction(hash=c4eaa5, ver=1, vin.size=1, vout.size=1, nLockTime=0)
@@ -82,7 +82,7 @@ public:
     CMainParams() {
         strNetworkID = "main";
         strCurrencyUnits = "ZCE";
-        bip44CoinType = 133; // As registered in https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+//        bip44CoinType = 133; // As registered in https://github.com/satoshilabs/slips/blob/master/slip-0044.md
         consensus.fCoinbaseMustBeProtected = true;
         consensus.nSubsidySlowStartInterval = 2;
         consensus.nSubsidyHalvingInterval = 840000;
@@ -130,11 +130,11 @@ public:
 
         genesis = CreateGenesisBlock(
           1549122057,
-          uint256S("0x0000000000000000000000000000000000000000000000000000000000000f93"),
-          ParseHex("00340a4e5831199850535232a1b0adc709c3f9ad5af715c8ce08080d60e3a8c7351431c7c36090efcc299a785337da88e3fd12f6fafbabd791af74cbc4b9e1cb785564d1713ef968b36e09414b76ebd859e15c7e121d58d4a47b937aa201607a24eafa310113343a64ed11b5a1f4ed366043ac7275c0890f5ec8dd0d9f044d603d5595ec2cbdfd4cc9e7e52c6ecaa616cd2e0391a44e0e557c129afc32c054bdc876c1bd15af6adf75a2d200dd620222133a36feef8d041273915b33dada4c5622a27c26f5a38992076001bef1209348049713b0b1c45c844495c0b9313ad449122a4e5dd2fdd3d2496efd00a15479681392b04227c10b4306cb3fed742b83aca9fe205954f0496aacdf2f617faf7b93e5a87942fb5977c542a0aea117562a97adf5fd965322c438c78def31236b7ea7d028539ff54b189504332ed5372b26bc92697440f45d6b725bb74a6b60fdfab461062858fd8b5dfa11e9652d59f82eaa466b67a712c9034ee234f6a43d9e462f86ab1db9afbded544b1a7ec061a75ea77a9557257fd52495d1d9db1820f67450"),
+          uint256S("0x00000000000000000000000000000000000000000000000000000000000000c9"),
+          ParseHex("01614bae9428d2f40bb93aef61b4a444a112d08c321d10ceb72272d71e387fab5169579f35a2babbb5395d9d17c93f70b60305d06eeb04e49e99451a89e51846600f006cfe26c2895574a71b3faee124834fb869b023d7e24deabf830469b4b20f6c763f025819238c9d95cced7a30afc5c68ba51b2a0da8389915538b0fee7e6bdf72d81faf52cbe87455443264f835dec78bd31c3b08d20c2618ea939547597727e33873d6a29279c63bf1a4831c137fee91455318e79d768bf893eb239f112df911d1836bde850b3fe544387c9d5174ba7798360999a6532e9a3185f3b09e9f3505c656ca6e4f03ae32021e56df8414a5feb64f40b33a752212fcf0d886b62e48a2fcefe351b03be262e29cd7cdf5e17d1e2ef122337c01dad7917691a2c3c4d4df28e889535b1ad11711142b16c6c01a465c306cc8e241bd03b484ea2b95a8f5ebb8321abb0aba88ecb00a48b8f5cd34910d9ecf2e9e387689dd3d9c2a06306bb4bb2666893f0ba6e7327a5525685a4e6e15b2685c38a2ecd7c749a9c2fc9547e4777cf2fd35b16ef1c317a1be86"),
             0x1f07ffff, 4, 0);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00017483e2b9ea05b65b06b0acbe6aa918d9b1f908e2f9126377521ae191937e"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0004f570147aceca3db5d484b9c96e4a52504da26f2d6029a928d6e415de512c"));
         // assert(genesis.hashMerkleRoot == uint256S("0x8d5f63b72c5425b0e426c35f9fed3713c4db0357562ad4c35f06d4581a6e6de6"));
 
         vFixedSeeds.clear();
@@ -318,11 +318,11 @@ public:
 
         genesis = CreateGenesisBlock(
             1549122056,
-            uint256S("0x0000000000000000000000000000000000000000000000000000000000000032"),
-            ParseHex("033b4ea638ccc2337edc757154621884967771236fb3564f7a38e927ccfadea392d7d8ef20e7429edd825e069c933be3aa650c1e3b552f1d0351159b8ce977e9dd65b1923e42ec4343d1c865b392f95fa6a736e6564032776275977c8096e8ea8b90807f0e5a07b8e4de55b37ab824e7a18a5b5f749f49cf102dfe90c08c73b178696e2e22dfdc3cdd48cdf93f2b8a7f0b42afb5b4a716b596d2f185065a05c6b10ef1b66d4b196790c10eb6b61234269d9f2c5ea2621115b23a756683173587a5b5ae7c1b98508f1210475bbe3ad4aaa1daeef5d71f97747cd392a35d2b90f8ab221ff2de78fb49d37a99d6cde341ea3632cb3f1fa05fdc4dd812c27221f85c6068665f2bfbb26436277ac6658692dfecf1f0132f50a463ebd439dcb5427cd29fd57a939c6eba32238fe1bc13253924893c0c9a2e119934f3e3a71bd72f6f0bf7bdfe093d1861e3ea2d5446831ccedafc320dc24341a200a176e47fd05813285b65decca3fba81cf57901dc20b78de042c85045c17dec3f03895988d8a9410a7dc410f3fbeadaf2a67b39ff7beffec8"),
+            uint256S("0000000000000000000000000000000000000000000000000000000000000012"),
+            ParseHex("02daafb771de2d1adc97702700dada82f29669bfe795ba37281b08e7b1fc0b5646131271d633a2b3f9f1fbfd335be0ddc58f077db5ef23c68d3317d8dd25c877e52fee5ec6895b89a0e18e11a929cee4b4c6903a259a315353ce3e16cfb56f940ae5628b0ae46eebeafd8da6d9101277a29b802e130e1905ea57f03db6177fb1e3d0c8da6bf774300de7d1157ec4e0fba0284ff40abb15aac2f08d9614bea173681217b6d345ce76672adb8fece9963baed434ffe4debb4b95a62dc4a81e3c8a150ecd54a7928b8c032996ec1c6d7bc63efdf43f1229d61b2f17c95e1c18cea5e124609849ac1b6d413dbd4e2c74f1289d48effdcb6cb715b5b00d855556c14562b64dbf6ad7940ba455d0655d2b96b0ded0e7252460eb21af2a310dfae2bbb352552671776e2a07f5dca5fa06d8c4312be38873cc329b59b13f70cb5f3d21ef82a0f867f64262bbb491c3128a607c0b7fe6a7ebdeac953a4ca2c7e95d4a09c15cff2c9b1fd2b95609ea63a5d739effa8dbbb2e95df9c40fd9d563465a884827f0006b298ed95d48b8ea7994835eeb93"),
             0x2007ffff, 4, 0);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x01a9b09e00df932987686f7c96abae19c0d8ee3bef764eb4a1557f9e11f95b0e"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0109e69de1fd2a56275896625dc8b93cdd4958c5fd41e7bed5bfd805e6b21c6b"));
         // assert(genesis.hashMerkleRoot == uint256S("0x8d5f63b72c5425b0e426c35f9fed3713c4db0357562ad4c35f06d4581a6e6de6"));
 
         vFixedSeeds.clear();
@@ -450,12 +450,12 @@ public:
 
         genesis = CreateGenesisBlock(
             1549122055,
-            uint256S("0x0000000000000000000000000000000000000000000000000000000000000003"),
-            ParseHex("116be31274cfbe69b14653667d26ae5e49f1151bd932328ce4d37c163dd20b129c29cbbd"),
+            uint256S("0x000000000000000000000000000000000000000000000000000000000000001d"),
+            ParseHex("0fa56b776124628b641af754eb539cc9a3f8163b0dcae33b2b0f9b1f4779ffb88d6723c0"),
             0x200f0f0f, 4, 0);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x076741c594b84f11369930e3962d32777e4f727115bbd0d202ac5d13cc36b68c"));
-        assert(genesis.hashMerkleRoot == uint256S("0x8d5f63b72c5425b0e426c35f9fed3713c4db0357562ad4c35f06d4581a6e6de6"));
+        assert(consensus.hashGenesisBlock == uint256S("0x03e0d232f283b9aa4c02c50ebc0ca9df07b228e4791e8799a9c12ef1e9661e26"));
+//        assert(genesis.hashMerkleRoot == uint256S("0x8d5f63b72c5425b0e426c35f9fed3713c4db0357562ad4c35f06d4581a6e6de6"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
