@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The Zcash developers
+// Copyright (c) 2018 The ZiCE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,36 +12,36 @@
 #include "script/script.h"
 #include "script/standard.h"
 #include "uint256.h"
-#include "zcash/Address.hpp"
-#include "zcash/IncrementalMerkleTree.hpp"
-#include "zcash/JoinSplit.hpp"
-#include "zcash/Note.hpp"
-#include "zcash/NoteEncryption.hpp"
+#include "zice/Address.hpp"
+#include "zice/IncrementalMerkleTree.hpp"
+#include "zice/JoinSplit.hpp"
+#include "zice/Note.hpp"
+#include "zice/NoteEncryption.hpp"
 
 #include <boost/optional.hpp>
 
 struct SpendDescriptionInfo {
-    libzcash::SaplingExpandedSpendingKey expsk;
-    libzcash::SaplingNote note;
+    libzice::SaplingExpandedSpendingKey expsk;
+    libzice::SaplingNote note;
     uint256 alpha;
     uint256 anchor;
     SaplingWitness witness;
 
     SpendDescriptionInfo(
-        libzcash::SaplingExpandedSpendingKey expsk,
-        libzcash::SaplingNote note,
+        libzice::SaplingExpandedSpendingKey expsk,
+        libzice::SaplingNote note,
         uint256 anchor,
         SaplingWitness witness);
 };
 
 struct OutputDescriptionInfo {
     uint256 ovk;
-    libzcash::SaplingNote note;
+    libzice::SaplingNote note;
     std::array<unsigned char, ZC_MEMO_SIZE> memo;
 
     OutputDescriptionInfo(
         uint256 ovk,
-        libzcash::SaplingNote note,
+        libzice::SaplingNote note,
         std::array<unsigned char, ZC_MEMO_SIZE> memo) : ovk(ovk), note(note), memo(memo) {}
 };
 
@@ -82,12 +82,12 @@ private:
 
     std::vector<SpendDescriptionInfo> spends;
     std::vector<OutputDescriptionInfo> outputs;
-    std::vector<libzcash::JSInput> jsInputs;
-    std::vector<libzcash::JSOutput> jsOutputs;
+    std::vector<libzice::JSInput> jsInputs;
+    std::vector<libzice::JSOutput> jsOutputs;
     std::vector<TransparentInputInfo> tIns;
 
-    boost::optional<std::pair<uint256, libzcash::SaplingPaymentAddress>> saplingChangeAddr;
-    boost::optional<libzcash::SproutPaymentAddress> sproutChangeAddr;
+    boost::optional<std::pair<uint256, libzice::SaplingPaymentAddress>> saplingChangeAddr;
+    boost::optional<libzice::SproutPaymentAddress> sproutChangeAddr;
     boost::optional<CTxDestination> tChangeAddr;
 
 public:
@@ -106,26 +106,26 @@ public:
     // Throws if the anchor does not match the anchor used by
     // previously-added Sapling spends.
     void AddSaplingSpend(
-        libzcash::SaplingExpandedSpendingKey expsk,
-        libzcash::SaplingNote note,
+        libzice::SaplingExpandedSpendingKey expsk,
+        libzice::SaplingNote note,
         uint256 anchor,
         SaplingWitness witness);
 
     void AddSaplingOutput(
         uint256 ovk,
-        libzcash::SaplingPaymentAddress to,
+        libzice::SaplingPaymentAddress to,
         CAmount value,
         std::array<unsigned char, ZC_MEMO_SIZE> memo = {{0xF6}});
 
     // Throws if the anchor does not match the anchor used by
     // previously-added Sprout inputs.
     void AddSproutInput(
-        libzcash::SproutSpendingKey sk,
-        libzcash::SproutNote note,
+        libzice::SproutSpendingKey sk,
+        libzice::SproutNote note,
         SproutWitness witness);
 
     void AddSproutOutput(
-        libzcash::SproutPaymentAddress to,
+        libzice::SproutPaymentAddress to,
         CAmount value,
         std::array<unsigned char, ZC_MEMO_SIZE> memo = {{0xF6}});
 
@@ -134,9 +134,9 @@ public:
 
     void AddTransparentOutput(CTxDestination& to, CAmount value);
 
-    void SendChangeTo(libzcash::SaplingPaymentAddress changeAddr, uint256 ovk);
+    void SendChangeTo(libzice::SaplingPaymentAddress changeAddr, uint256 ovk);
 
-    void SendChangeTo(libzcash::SproutPaymentAddress);
+    void SendChangeTo(libzice::SproutPaymentAddress);
 
     void SendChangeTo(CTxDestination& changeAddr);
 
@@ -148,8 +148,8 @@ private:
     void CreateJSDescription(
         uint64_t vpub_old,
         uint64_t vpub_new,
-        std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS> vjsin,
-        std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS> vjsout,
+        std::array<libzice::JSInput, ZC_NUM_JS_INPUTS> vjsin,
+        std::array<libzice::JSOutput, ZC_NUM_JS_OUTPUTS> vjsout,
         std::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
         std::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap);
 };

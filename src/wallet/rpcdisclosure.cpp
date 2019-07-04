@@ -1,4 +1,4 @@
-// Copyright (c) 2017 The Zcash developers
+// Copyright (c) 2017 The ZiCE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -23,11 +23,11 @@
 
 #include <univalue.h>
 
-#include "zcash/Note.hpp"
-#include "zcash/NoteEncryption.hpp"
+#include "zice/Note.hpp"
+#include "zice/NoteEncryption.hpp"
 
 using namespace std;
-using namespace libzcash;
+using namespace libzice;
 
 // Function declaration for function implemented in wallet/rpcwallet.cpp
 bool EnsureWalletIsAvailable(bool avoidException);
@@ -261,7 +261,7 @@ UniValue z_validatepaymentdisclosure(const UniValue& params, bool fHelp)
         try {
             // Decrypt the note to get value and memo field
             JSDescription jsdesc = tx.vjoinsplit[pd.payload.js];
-            uint256 h_sig = jsdesc.h_sig(*pzcashParams, tx.joinSplitPubKey);
+            uint256 h_sig = jsdesc.h_sig(*pziceParams, tx.joinSplitPubKey);
 
             ZCPaymentDisclosureNoteDecryption decrypter;
 

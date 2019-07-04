@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2019 The Zcash developers
+# Copyright (c) 2019 The ZiCE developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -29,7 +29,7 @@ class MergeToAddressMixedNotes(BitcoinTestFramework):
         self.nodes[0].generate(102)
         self.sync_all()
 
-        # Send some ZEC to Sprout/Sapling addresses
+        # Send some ZCE to Sprout/Sapling addresses
         coinbase_addr = get_coinbase_address(self.nodes[0])
         sproutAddr = self.nodes[0].z_getnewaddress('sprout')
         saplingAddr = self.nodes[0].z_getnewaddress('sapling')

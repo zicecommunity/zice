@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2018 The Zcash developers
+# Copyright (c) 2018 The ZiCE developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -43,7 +43,7 @@ class MempoolUpgradeActivationTest(BitcoinTestFramework):
         self.nodes[0].generate(97)
         self.sync_all()
 
-        # Shield some ZEC
+        # Shield some ZCE
         node1_taddr = get_coinbase_address(self.nodes[1])
         node0_zaddr = self.nodes[0].z_getnewaddress('sprout')
         recipients = [{'address': node0_zaddr, 'amount': Decimal('10')}]

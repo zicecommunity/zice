@@ -1,4 +1,4 @@
-Zcash Contributors
+ZiCE Contributors
 ==================
 
 Jack Grigg (873)
@@ -144,5 +144,5 @@ Alex van der Peet (1)
 Alex (1)
 Adam Weiss (1)
 Adam Brown (1)
-4ZEC (1)
+4ZCE (1)
 21E14 (1)

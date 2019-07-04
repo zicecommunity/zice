@@ -1,4 +1,4 @@
-// Copyright (c) 2016 The Zcash developers
+// Copyright (c) 2016 The ZiCE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +11,7 @@
 
 // Sprout
 CMutableTransaction GetValidSproutReceiveTransaction(ZCJoinSplit& params,
-                                const libzcash::SproutSpendingKey& sk,
+                                const libzice::SproutSpendingKey& sk,
                                 CAmount value,
                                 bool randomInputs,
                                 int32_t version /* = 2 */) {
@@ -34,14 +34,14 @@ CMutableTransaction GetValidSproutReceiveTransaction(ZCJoinSplit& params,
     crypto_sign_keypair(joinSplitPubKey.begin(), joinSplitPrivKey);
     mtx.joinSplitPubKey = joinSplitPubKey;
 
-    std::array<libzcash::JSInput, 2> inputs = {
-        libzcash::JSInput(), // dummy input
-        libzcash::JSInput() // dummy input
+    std::array<libzice::JSInput, 2> inputs = {
+        libzice::JSInput(), // dummy input
+        libzice::JSInput() // dummy input
     };
 
-    std::array<libzcash::JSOutput, 2> outputs = {
-        libzcash::JSOutput(sk.address(), value),
-        libzcash::JSOutput(sk.address(), value)
+    std::array<libzice::JSOutput, 2> outputs = {
+        libzice::JSOutput(sk.address(), value),
+        libzice::JSOutput(sk.address(), value)
     };
 
     // Prepare JoinSplits
@@ -75,7 +75,7 @@ CMutableTransaction GetValidSproutReceiveTransaction(ZCJoinSplit& params,
 }
 
 CWalletTx GetValidSproutReceive(ZCJoinSplit& params,
-                                const libzcash::SproutSpendingKey& sk,
+                                const libzice::SproutSpendingKey& sk,
                                 CAmount value,
                                 bool randomInputs,
                                 int32_t version /* = 2 */)
@@ -89,7 +89,7 @@ CWalletTx GetValidSproutReceive(ZCJoinSplit& params,
 }
 
 CWalletTx GetInvalidCommitmentSproutReceive(ZCJoinSplit& params,
-                                const libzcash::SproutSpendingKey& sk,
+                                const libzice::SproutSpendingKey& sk,
                                 CAmount value,
                                 bool randomInputs,
                                 int32_t version /* = 2 */)
@@ -104,12 +104,12 @@ CWalletTx GetInvalidCommitmentSproutReceive(ZCJoinSplit& params,
     return wtx;
 }
 
-libzcash::SproutNote GetSproutNote(ZCJoinSplit& params,
-                                   const libzcash::SproutSpendingKey& sk,
+libzice::SproutNote GetSproutNote(ZCJoinSplit& params,
+                                   const libzice::SproutSpendingKey& sk,
                                    const CTransaction& tx, size_t js, size_t n) {
     ZCNoteDecryption decryptor {sk.receiving_key()};
     auto hSig = tx.vjoinsplit[js].h_sig(params, tx.joinSplitPubKey);
-    auto note_pt = libzcash::SproutNotePlaintext::decrypt(
+    auto note_pt = libzice::SproutNotePlaintext::decrypt(
         decryptor,
         tx.vjoinsplit[js].ciphertexts[n],
         tx.vjoinsplit[js].ephemeralKey,
@@ -119,8 +119,8 @@ libzcash::SproutNote GetSproutNote(ZCJoinSplit& params,
 }
 
 CWalletTx GetValidSproutSpend(ZCJoinSplit& params,
-                              const libzcash::SproutSpendingKey& sk,
-                              const libzcash::SproutNote& note,
+                              const libzice::SproutSpendingKey& sk,
+                              const libzice::SproutNote& note,
                               CAmount value) {
     CMutableTransaction mtx;
     mtx.vout.resize(2);
@@ -136,33 +136,33 @@ CWalletTx GetValidSproutSpend(ZCJoinSplit& params,
     // Fake tree for the unused witness
     SproutMerkleTree tree;
 
-    libzcash::JSOutput dummyout;
-    libzcash::JSInput dummyin;
+    libzice::JSOutput dummyout;
+    libzice::JSInput dummyin;
 
     {
         if (note.value() > value) {
-            libzcash::SproutSpendingKey dummykey = libzcash::SproutSpendingKey::random();
-            libzcash::SproutPaymentAddress dummyaddr = dummykey.address();
-            dummyout = libzcash::JSOutput(dummyaddr, note.value() - value);
+            libzice::SproutSpendingKey dummykey = libzice::SproutSpendingKey::random();
+            libzice::SproutPaymentAddress dummyaddr = dummykey.address();
+            dummyout = libzice::JSOutput(dummyaddr, note.value() - value);
         } else if (note.value() < value) {
-            libzcash::SproutSpendingKey dummykey = libzcash::SproutSpendingKey::random();
-            libzcash::SproutPaymentAddress dummyaddr = dummykey.address();
-            libzcash::SproutNote dummynote(dummyaddr.a_pk, (value - note.value()), uint256(), uint256());
+            libzice::SproutSpendingKey dummykey = libzice::SproutSpendingKey::random();
+            libzice::SproutPaymentAddress dummyaddr = dummykey.address();
+            libzice::SproutNote dummynote(dummyaddr.a_pk, (value - note.value()), uint256(), uint256());
             tree.append(dummynote.cm());
-            dummyin = libzcash::JSInput(tree.witness(), dummynote, dummykey);
+            dummyin = libzice::JSInput(tree.witness(), dummynote, dummykey);
         }
     }
 
     tree.append(note.cm());
 
-    std::array<libzcash::JSInput, 2> inputs = {
-        libzcash::JSInput(tree.witness(), note, sk),
+    std::array<libzice::JSInput, 2> inputs = {
+        libzice::JSInput(tree.witness(), note, sk),
         dummyin
     };
 
-    std::array<libzcash::JSOutput, 2> outputs = {
+    std::array<libzice::JSOutput, 2> outputs = {
         dummyout, // dummy output
-        libzcash::JSOutput() // dummy output
+        libzice::JSOutput() // dummy output
     };
 
     // Prepare JoinSplits
@@ -200,10 +200,10 @@ void RegtestDeactivateSapling() {
     UpdateNetworkUpgradeParameters(Consensus::UPGRADE_OVERWINTER, Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT);
 }
 
-libzcash::SaplingExtendedSpendingKey GetTestMasterSaplingSpendingKey() {
+libzice::SaplingExtendedSpendingKey GetTestMasterSaplingSpendingKey() {
     std::vector<unsigned char, secure_allocator<unsigned char>> rawSeed(32);
     HDSeed seed(rawSeed);
-    return libzcash::SaplingExtendedSpendingKey::Master(seed);
+    return libzice::SaplingExtendedSpendingKey::Master(seed);
 }
 
 CKey AddTestCKeyToKeyStore(CBasicKeyStore& keyStore) {
@@ -212,9 +212,9 @@ CKey AddTestCKeyToKeyStore(CBasicKeyStore& keyStore) {
     return tsk;
 }
 
-TestSaplingNote GetTestSaplingNote(const libzcash::SaplingPaymentAddress& pa, CAmount value) {
+TestSaplingNote GetTestSaplingNote(const libzice::SaplingPaymentAddress& pa, CAmount value) {
     // Generate dummy Sapling note
-    libzcash::SaplingNote note(pa, value);
+    libzice::SaplingNote note(pa, value);
     uint256 cm = note.cm().get();
     SaplingMerkleTree tree;
     tree.append(cm);
@@ -223,7 +223,7 @@ TestSaplingNote GetTestSaplingNote(const libzcash::SaplingPaymentAddress& pa, CA
 
 CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  CBasicKeyStore& keyStore,
-                                 const libzcash::SaplingExtendedSpendingKey &sk,
+                                 const libzice::SaplingExtendedSpendingKey &sk,
                                  CAmount value) {
     // From taddr
     CKey tsk = AddTestCKeyToKeyStore(keyStore);

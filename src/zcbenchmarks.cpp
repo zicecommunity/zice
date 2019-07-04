@@ -28,12 +28,12 @@
 
 #include "zcbenchmarks.h"
 
-#include "zcash/Zcash.h"
-#include "zcash/IncrementalMerkleTree.hpp"
-#include "zcash/Note.hpp"
+#include "zice/ZiCE.h"
+#include "zice/IncrementalMerkleTree.hpp"
+#include "zice/Note.hpp"
 #include "librustzcash.h"
 
-using namespace libzcash;
+using namespace libzice;
 // This method is based on Shutdown from init.cpp
 void pre_wallet_load()
 {
@@ -119,7 +119,7 @@ double benchmark_create_joinsplit()
     struct timeval tv_start;
     timer_start(tv_start);
     JSDescription jsdesc(true,
-                         *pzcashParams,
+                         *pziceParams,
                          joinSplitPubKey,
                          anchor,
                          {JSInput(), JSInput()},
@@ -128,8 +128,8 @@ double benchmark_create_joinsplit()
                          0);
     double ret = timer_stop(tv_start);
 
-    auto verifier = libzcash::ProofVerifier::Strict();
-    assert(jsdesc.Verify(*pzcashParams, verifier, joinSplitPubKey));
+    auto verifier = libzice::ProofVerifier::Strict();
+    assert(jsdesc.Verify(*pziceParams, verifier, joinSplitPubKey));
     return ret;
 }
 
@@ -159,8 +159,8 @@ double benchmark_verify_joinsplit(const JSDescription &joinsplit)
     struct timeval tv_start;
     timer_start(tv_start);
     uint256 joinSplitPubKey;
-    auto verifier = libzcash::ProofVerifier::Strict();
-    joinsplit.Verify(*pzcashParams, verifier, joinSplitPubKey);
+    auto verifier = libzice::ProofVerifier::Strict();
+    joinsplit.Verify(*pziceParams, verifier, joinSplitPubKey);
     return timer_stop(tv_start);
 }
 
@@ -290,12 +290,12 @@ double benchmark_try_decrypt_sprout_notes(size_t nKeys)
 {
     CWallet wallet;
     for (int i = 0; i < nKeys; i++) {
-        auto sk = libzcash::SproutSpendingKey::random();
+        auto sk = libzice::SproutSpendingKey::random();
         wallet.AddSproutSpendingKey(sk);
     }
 
-    auto sk = libzcash::SproutSpendingKey::random();
-    auto tx = GetValidSproutReceive(*pzcashParams, sk, 10, true);
+    auto sk = libzice::SproutSpendingKey::random();
+    auto tx = GetValidSproutReceive(*pziceParams, sk, 10, true);
 
     struct timeval tv_start;
     timer_start(tv_start);
@@ -330,9 +330,9 @@ double benchmark_try_decrypt_sapling_notes(size_t nKeys)
     return timer_stop(tv_start);
 }
 
-CWalletTx CreateSproutTxWithNoteData(const libzcash::SproutSpendingKey& sk) {
-    auto wtx = GetValidSproutReceive(*pzcashParams, sk, 10, true);
-    auto note = GetSproutNote(*pzcashParams, sk, wtx, 0, 1);
+CWalletTx CreateSproutTxWithNoteData(const libzice::SproutSpendingKey& sk) {
+    auto wtx = GetValidSproutReceive(*pziceParams, sk, 10, true);
+    auto note = GetSproutNote(*pziceParams, sk, wtx, 0, 1);
     auto nullifier = note.nullifier(sk);
 
     mapSproutNoteData_t noteDataMap;
@@ -353,7 +353,7 @@ double benchmark_increment_sprout_note_witnesses(size_t nTxs)
     SproutMerkleTree sproutTree;
     SaplingMerkleTree saplingTree;
 
-    auto sproutSpendingKey = libzcash::SproutSpendingKey::random();
+    auto sproutSpendingKey = libzice::SproutSpendingKey::random();
     wallet.AddSproutSpendingKey(sproutSpendingKey);
 
     // First block
@@ -390,7 +390,7 @@ double benchmark_increment_sprout_note_witnesses(size_t nTxs)
 
 CWalletTx CreateSaplingTxWithNoteData(const Consensus::Params& consensusParams,
                                       CBasicKeyStore& keyStore,
-                                      const libzcash::SaplingExtendedSpendingKey &sk) {
+                                      const libzice::SaplingExtendedSpendingKey &sk) {
     auto wtx = GetValidSaplingReceive(consensusParams, keyStore, sk, 10);
     auto testNote = GetTestSaplingNote(sk.DefaultAddress(), 10);
     auto fvk = sk.expsk.full_viewing_key();
@@ -609,7 +609,7 @@ double benchmark_listunspent()
 
 double benchmark_create_sapling_spend()
 {
-    auto sk = libzcash::SaplingSpendingKey::random();
+    auto sk = libzice::SaplingSpendingKey::random();
     auto expsk = sk.expanded_spending_key();
     auto address = sk.default_address();
     SaplingNote note(address, GetRand(MAX_MONEY));
@@ -660,13 +660,13 @@ double benchmark_create_sapling_spend()
 
 double benchmark_create_sapling_output()
 {
-    auto sk = libzcash::SaplingSpendingKey::random();
+    auto sk = libzice::SaplingSpendingKey::random();
     auto address = sk.default_address();
 
     std::array<unsigned char, ZC_MEMO_SIZE> memo;
     SaplingNote note(address, GetRand(MAX_MONEY));
 
-    libzcash::SaplingNotePlaintext notePlaintext(note, memo);
+    libzice::SaplingNotePlaintext notePlaintext(note, memo);
     auto res = notePlaintext.encrypt(note.pk_d);
     if (!res) {
         throw JSONRPCError(RPC_INTERNAL_ERROR, "SaplingNotePlaintext::encrypt() failed");

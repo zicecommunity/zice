@@ -1,4 +1,4 @@
-// Copyright (c) 2016 The Zcash developers
+// Copyright (c) 2016 The ZiCE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -9,8 +9,8 @@
 #include "amount.h"
 #include "primitives/transaction.h"
 #include "transaction_builder.h"
-#include "zcash/JoinSplit.hpp"
-#include "zcash/Address.hpp"
+#include "zice/JoinSplit.hpp"
+#include "zice/Address.hpp"
 #include "wallet.h"
 #include "wallet/paymentdisclosure.h"
 
@@ -23,7 +23,7 @@
 // Default transaction fee if caller does not specify one.
 #define ASYNC_RPC_OPERATION_DEFAULT_MINERS_FEE   10000
 
-using namespace libzcash;
+using namespace libzice;
 
 // A recipient is a tuple of address, amount, memo (optional if zaddr)
 typedef std::tuple<std::string, CAmount, std::string> SendManyRecipient;

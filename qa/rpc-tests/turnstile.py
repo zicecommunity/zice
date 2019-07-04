@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2019 The Zcash developers
+# Copyright (c) 2019 The ZiCE developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -17,13 +17,13 @@
 # when experimental feature -developersetpoolsizezero is switched on.
 #
 # To perform a manual turnstile test on testnet:
-# 1. Launch zcashd
+# 1. Launch ziced
 # 2. Shield transparent funds
 # 3. Wait for transaction to be mined
-# 4. Restart zcashd, enabling experimental feature -developersetpoolsizezero
+# 4. Restart ziced, enabling experimental feature -developersetpoolsizezero
 # 5. Unshield funds
 # 6. Wait for transaction to be mined (using testnet explorer or another node)
-# 7. Verify zcashd rejected the block
+# 7. Verify ziced rejected the block
 #
 
 import sys; assert sys.version_info < (3,), ur"This script does not run under Python 3. Please use Python 2.7.x."

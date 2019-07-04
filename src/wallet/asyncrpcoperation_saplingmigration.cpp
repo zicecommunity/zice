@@ -82,7 +82,7 @@ bool AsyncRPCOperation_saplingmigration::main_impl() {
     for (const SproutNoteEntry& sproutEntry : sproutEntries) {
         availableFunds += sproutEntry.note.value();
     }
-    // If the remaining amount to be migrated is less than 0.01 ZEC, end the migration.
+    // If the remaining amount to be migrated is less than 0.01 ZCE, end the migration.
     if (availableFunds < CENT) {
         LogPrint("zrpcunsafe", "%s: Available Sprout balance (%s) less than required minimum (%s). Stopping.\n",
             getId(), FormatMoney(availableFunds), FormatMoney(CENT));
@@ -91,7 +91,7 @@ bool AsyncRPCOperation_saplingmigration::main_impl() {
     }
 
     HDSeed seed = pwalletMain->GetHDSeedForRPC();
-    libzcash::SaplingPaymentAddress migrationDestAddress = getMigrationDestAddress(seed);
+    libzice::SaplingPaymentAddress migrationDestAddress = getMigrationDestAddress(seed);
 
     auto consensusParams = Params().GetConsensus();
 
@@ -103,7 +103,7 @@ bool AsyncRPCOperation_saplingmigration::main_impl() {
     CCoinsViewCache coinsView(pcoinsTip);
     do {
         CAmount amountToSend = chooseAmount(availableFunds);
-        auto builder = TransactionBuilder(consensusParams, targetHeight_, MIGRATION_EXPIRY_DELTA, pwalletMain, pzcashParams,
+        auto builder = TransactionBuilder(consensusParams, targetHeight_, MIGRATION_EXPIRY_DELTA, pwalletMain, pziceParams,
                                           &coinsView, &cs_main);
         LogPrint("zrpcunsafe", "%s: Beginning creating transaction with Sapling output amount=%s\n", getId(), FormatMoney(amountToSend - FEE));
         std::vector<SproutNoteEntry> fromNotes;
@@ -124,19 +124,19 @@ bool AsyncRPCOperation_saplingmigration::main_impl() {
                 FormatMoney(sproutEntry.note.value()),
                 HexStr(data).substr(0, 10)
                 );
-            libzcash::SproutSpendingKey sproutSk;
+            libzice::SproutSpendingKey sproutSk;
             pwalletMain->GetSproutSpendingKey(sproutEntry.address, sproutSk);
             std::vector<JSOutPoint> vOutPoints = {sproutEntry.jsop};
             // Each migration transaction SHOULD specify an anchor at height N-10
             // for each Sprout JoinSplit description
-            // TODO: the above functionality (in comment) is not implemented in zcashd
+            // TODO: the above functionality (in comment) is not implemented in ziced
             uint256 inputAnchor;
             std::vector<boost::optional<SproutWitness>> vInputWitnesses;
             pwalletMain->GetSproutNoteWitnesses(vOutPoints, vInputWitnesses, inputAnchor);
             builder.AddSproutInput(sproutSk, sproutEntry.note, vInputWitnesses[0].get());
         }
-        // The amount chosen *includes* the 0.0001 ZEC fee for this transaction, i.e.
-        // the value of the Sapling output will be 0.0001 ZEC less.
+        // The amount chosen *includes* the 0.0001 ZCE fee for this transaction, i.e.
+        // the value of the Sapling output will be 0.0001 ZCE less.
         builder.SetFee(FEE);
         builder.AddSaplingOutput(ovkForShieldingFromTaddr(seed), migrationDestAddress, amountToSend - FEE);
         CTransaction tx = builder.Build().GetTxOrThrow();
@@ -184,16 +184,16 @@ CAmount AsyncRPCOperation_saplingmigration::chooseAmount(const CAmount& availabl
 }
 
 // Unless otherwise specified, the migration destination address is the address for Sapling account 0
-libzcash::SaplingPaymentAddress AsyncRPCOperation_saplingmigration::getMigrationDestAddress(const HDSeed& seed) {
+libzice::SaplingPaymentAddress AsyncRPCOperation_saplingmigration::getMigrationDestAddress(const HDSeed& seed) {
     if (mapArgs.count("-migrationdestaddress")) {
         std::string migrationDestAddress = mapArgs["-migrationdestaddress"];
         auto address = DecodePaymentAddress(migrationDestAddress);
-        auto saplingAddress = boost::get<libzcash::SaplingPaymentAddress>(&address);
+        auto saplingAddress = boost::get<libzice::SaplingPaymentAddress>(&address);
         assert(saplingAddress != nullptr); // This is checked in init.cpp
         return *saplingAddress;
     }
     // Derive the address for Sapling account 0
-    auto m = libzcash::SaplingExtendedSpendingKey::Master(seed);
+    auto m = libzice::SaplingExtendedSpendingKey::Master(seed);
     uint32_t bip44CoinType = Params().BIP44CoinType();
 
     // We use a fixed keypath scheme of m/32'/coin_type'/account'
@@ -203,13 +203,13 @@ libzcash::SaplingPaymentAddress AsyncRPCOperation_saplingmigration::getMigration
     auto m_32h_cth = m_32h.Derive(bip44CoinType | ZIP32_HARDENED_KEY_LIMIT);
 
     // Derive m/32'/coin_type'/0'
-    libzcash::SaplingExtendedSpendingKey xsk = m_32h_cth.Derive(0 | ZIP32_HARDENED_KEY_LIMIT);
+    libzice::SaplingExtendedSpendingKey xsk = m_32h_cth.Derive(0 | ZIP32_HARDENED_KEY_LIMIT);
 
-    libzcash::SaplingPaymentAddress toAddress = xsk.DefaultAddress();
+    libzice::SaplingPaymentAddress toAddress = xsk.DefaultAddress();
 
     // Refactor: this is similar logic as in the visitor HaveSpendingKeyForPaymentAddress and is used elsewhere
-    libzcash::SaplingIncomingViewingKey ivk;
-    libzcash::SaplingFullViewingKey fvk;
+    libzice::SaplingIncomingViewingKey ivk;
+    libzice::SaplingFullViewingKey fvk;
     if (!(pwalletMain->GetSaplingIncomingViewingKey(toAddress, ivk) &&
         pwalletMain->GetSaplingFullViewingKey(ivk, fvk) &&
         pwalletMain->HaveSaplingSpendingKey(fvk))) {

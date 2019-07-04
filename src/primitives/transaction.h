@@ -18,10 +18,10 @@
 
 #include <boost/variant.hpp>
 
-#include "zcash/NoteEncryption.hpp"
-#include "zcash/Zcash.h"
-#include "zcash/JoinSplit.hpp"
-#include "zcash/Proof.hpp"
+#include "zice/NoteEncryption.hpp"
+#include "zice/ZiCE.h"
+#include "zice/JoinSplit.hpp"
+#include "zice/Proof.hpp"
 
 // Overwinter transaction version
 static const int32_t OVERWINTER_TX_VERSION = 3;
@@ -49,7 +49,7 @@ public:
     uint256 anchor;                //!< A Merkle root of the Sapling note commitment tree at some block height in the past.
     uint256 nullifier;             //!< The nullifier of the input note.
     uint256 rk;                    //!< The randomized public key for spendAuthSig.
-    libzcash::GrothProof zkproof;  //!< A zero-knowledge proof using the spend circuit.
+    libzice::GrothProof zkproof;  //!< A zero-knowledge proof using the spend circuit.
     spend_auth_sig_t spendAuthSig; //!< A signature authorizing this spend.
 
     SpendDescription() { }
@@ -93,9 +93,9 @@ public:
     uint256 cv;                     //!< A value commitment to the value of the output note.
     uint256 cm;                     //!< The note commitment for the output note.
     uint256 ephemeralKey;           //!< A Jubjub public key.
-    libzcash::SaplingEncCiphertext encCiphertext; //!< A ciphertext component for the encrypted output note.
-    libzcash::SaplingOutCiphertext outCiphertext; //!< A ciphertext component for the encrypted output note.
-    libzcash::GrothProof zkproof;   //!< A zero-knowledge proof using the output circuit.
+    libzice::SaplingEncCiphertext encCiphertext; //!< A ciphertext component for the encrypted output note.
+    libzice::SaplingOutCiphertext outCiphertext; //!< A ciphertext component for the encrypted output note.
+    libzice::GrothProof zkproof;   //!< A zero-knowledge proof using the output circuit.
 
     OutputDescription() { }
 
@@ -138,7 +138,7 @@ class SproutProofSerializer : public boost::static_visitor<>
 public:
     SproutProofSerializer(Stream& s, bool useGroth) : s(s), useGroth(useGroth) {}
 
-    void operator()(const libzcash::PHGRProof& proof) const
+    void operator()(const libzice::PHGRProof& proof) const
     {
         if (useGroth) {
             throw std::ios_base::failure("Invalid Sprout proof for transaction format (expected GrothProof, found PHGRProof)");
@@ -146,7 +146,7 @@ public:
         ::Serialize(s, proof);
     }
 
-    void operator()(const libzcash::GrothProof& proof) const
+    void operator()(const libzice::GrothProof& proof) const
     {
         if (!useGroth) {
             throw std::ios_base::failure("Invalid Sprout proof for transaction format (expected PHGRProof, found GrothProof)");
@@ -166,11 +166,11 @@ template<typename Stream, typename T>
 inline void SerReadWriteSproutProof(Stream& s, T& proof, bool useGroth, CSerActionUnserialize ser_action)
 {
     if (useGroth) {
-        libzcash::GrothProof grothProof;
+        libzice::GrothProof grothProof;
         ::Unserialize(s, grothProof);
         proof = grothProof;
     } else {
-        libzcash::PHGRProof pghrProof;
+        libzice::PHGRProof pghrProof;
         ::Unserialize(s, pghrProof);
         proof = pghrProof;
     }
@@ -222,7 +222,7 @@ public:
 
     // JoinSplit proof
     // This is a zk-SNARK which ensures that this JoinSplit is valid.
-    libzcash::SproutProof proof;
+    libzice::SproutProof proof;
 
     JSDescription(): vpub_old(0), vpub_new(0) { }
 
@@ -231,8 +231,8 @@ public:
             ZCJoinSplit& params,
             const uint256& joinSplitPubKey,
             const uint256& rt,
-            const std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
-            const std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+            const std::array<libzice::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+            const std::array<libzice::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
             CAmount vpub_old,
             CAmount vpub_new,
             bool computeProof = true, // Set to false in some tests
@@ -244,8 +244,8 @@ public:
             ZCJoinSplit& params,
             const uint256& joinSplitPubKey,
             const uint256& rt,
-            std::array<libzcash::JSInput, ZC_NUM_JS_INPUTS>& inputs,
-            std::array<libzcash::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
+            std::array<libzice::JSInput, ZC_NUM_JS_INPUTS>& inputs,
+            std::array<libzice::JSOutput, ZC_NUM_JS_OUTPUTS>& outputs,
             std::array<size_t, ZC_NUM_JS_INPUTS>& inputMap,
             std::array<size_t, ZC_NUM_JS_OUTPUTS>& outputMap,
             CAmount vpub_old,
@@ -258,7 +258,7 @@ public:
     // Verifies that the JoinSplit proof is correct.
     bool Verify(
         ZCJoinSplit& params,
-        libzcash::ProofVerifier& verifier,
+        libzice::ProofVerifier& verifier,
         const uint256& joinSplitPubKey
     ) const;
 

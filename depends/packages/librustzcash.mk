@@ -1,6 +1,6 @@
 package=librustzcash
 $(package)_version=0.1
-$(package)_download_path=https://github.com/zcash/$(package)/archive/
+$(package)_download_path=https://github.com/zice/$(package)/archive/
 $(package)_file_name=$(package)-$($(package)_git_commit).tar.gz
 $(package)_download_file=$($(package)_git_commit).tar.gz
 $(package)_sha256_hash=9909ec59fa7a411c2071d6237b3363a0bc6e5e42358505cf64b7da0f58a7ff5a
@@ -11,7 +11,7 @@ $(package)_patches=cargo.config 0001-Start-using-cargo-clippy-for-CI.patch remov
 $(package)_rust_target=$(if $(rust_rust_target_$(canonical_host)),$(rust_rust_target_$(canonical_host)),$(canonical_host))
 
 ifeq ($(host_os),mingw32)
-$(package)_library_file=target/x86_64-pc-windows-gnu/release/rustzcash.lib
+$(package)_library_file=target/x86_64-pc-windows-gnu/release/rustzice.lib
 else ifneq ($(canonical_host),$(build))
 $(package)_library_file=target/$($(package)_rust_target)/release/librustzcash.a
 else

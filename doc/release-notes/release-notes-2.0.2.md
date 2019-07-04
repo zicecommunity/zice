@@ -7,7 +7,7 @@ Other issues
 Revoked key error when upgrading on Debian
 ------------------------------------------
 
-If you see the following error when updating to a new version of zcashd:
+If you see the following error when updating to a new version of ziced:
 
 `The following signatures were invalid: REVKEYSIG AEFD26F966E279CD`
 
@@ -17,13 +17,13 @@ Remove the key marked as revoked:
 
 Then retrieve the updated key:
 
-`wget -qO - https://apt.z.cash/zcash.asc | sudo apt-key add -`
+`wget -qO - https://apt.z.cash/zice.asc | sudo apt-key add -`
 
 Then update the package lists:
 
 `sudo apt-get update`
 
-[Issue](https://github.com/zcash/zcash/issues/3612)
+[Issue](https://github.com/zice/zice/issues/3612)
 
 Changelog
 =========
@@ -66,7 +66,7 @@ Jack Grigg (7):
 
 Jonathan "Duke" Leto (2):
       Clarify in sendmany/z_sendmany rpc docs that amounts are not floating point
-      Fix another instance of incorrectly saying amount is double precision, and s/ZC/ZEC/
+      Fix another instance of incorrectly saying amount is double precision, and s/ZC/ZCE/
 
 Larry Ruane (4):
       sapling z_sendmany default memo 0xf6 + zeros
@@ -84,11 +84,11 @@ Simon Liu (14):
       Update rpc_wallet_tests for new "sapling" default for z_getnewaddress.
       Update qa tests for new "sapling" default for z_getnewaddress.
       Add support for "notfound" message to mininode.
-      For ZEC-013. Mitigate potential tx expiry height related DoS vector.
-      For ZEC-013. Don't propagate txs which are expiring soon in p2p messages.
-      For ZEC-013. RPC createrawtransaction returns error if tx expiring soon.
-      For ZEC-013. Update qa tests broken by expiring soon threshold.
-      For ZEC-013. RPC sendrawtransaction returns error if tx expiring soon.
+      For ZCE-013. Mitigate potential tx expiry height related DoS vector.
+      For ZCE-013. Don't propagate txs which are expiring soon in p2p messages.
+      For ZCE-013. RPC createrawtransaction returns error if tx expiring soon.
+      For ZCE-013. Update qa tests broken by expiring soon threshold.
+      For ZCE-013. RPC sendrawtransaction returns error if tx expiring soon.
 
 Suhas Daftuar (2):
       Do not inv old or missing blocks when pruning

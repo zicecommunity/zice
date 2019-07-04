@@ -8,8 +8,8 @@
 #include "wallet/crypter.h"
 #endif
 #include "utiltest.h"
-#include "zcash/Address.hpp"
-#include "zcash/zip32.h"
+#include "zice/Address.hpp"
+#include "zice/zip32.h"
 
 #include "json_test_vectors.h"
 
@@ -57,16 +57,16 @@ TEST(keystore_tests, sapling_keys) {
         nk.SetHex(sapling_keys[i][5].getValStr());
         ivk.SetHex(sapling_keys[i][6].getValStr());
         
-        libzcash::diversifier_t default_d;
+        libzice::diversifier_t default_d;
         std::copy_n(ParseHex(sapling_keys[i][7].getValStr()).begin(), 11, default_d.begin());
         
         uint256 default_pk_d;
         default_pk_d.SetHex(sapling_keys[i][8].getValStr());
         
-        auto sk = libzcash::SaplingSpendingKey(skSeed);
+        auto sk = libzice::SaplingSpendingKey(skSeed);
         
         // Check that expanded spending key from primitives and from sk are the same
-        auto exp_sk_2 = libzcash::SaplingExpandedSpendingKey(ask, nsk, ovk);
+        auto exp_sk_2 = libzice::SaplingExpandedSpendingKey(ask, nsk, ovk);
         auto exp_sk = sk.expanded_spending_key();
         EXPECT_EQ(exp_sk, exp_sk_2);
             
@@ -75,12 +75,12 @@ TEST(keystore_tests, sapling_keys) {
         EXPECT_EQ(full_viewing_key, exp_sk.full_viewing_key());
         
         // Check that full viewing key from primitives and from sk are the same
-        auto full_viewing_key_2 = libzcash::SaplingFullViewingKey(ak, nk, ovk);
+        auto full_viewing_key_2 = libzice::SaplingFullViewingKey(ak, nk, ovk);
         EXPECT_EQ(full_viewing_key, full_viewing_key_2);
             
         // Check that incoming viewing key from primitives and from sk are the same
         auto in_viewing_key = full_viewing_key.in_viewing_key();
-        auto in_viewing_key_2 = libzcash::SaplingIncomingViewingKey(ivk);
+        auto in_viewing_key_2 = libzice::SaplingIncomingViewingKey(ivk);
         EXPECT_EQ(in_viewing_key, in_viewing_key_2);
         
         // Check that the default address from primitives and from sk method are the same
@@ -90,7 +90,7 @@ TEST(keystore_tests, sapling_keys) {
         auto default_addr_2 = addrOpt2.value();
         EXPECT_EQ(default_addr, default_addr_2);
         
-        auto default_addr_3 = libzcash::SaplingPaymentAddress(default_d, default_pk_d);
+        auto default_addr_3 = libzice::SaplingPaymentAddress(default_d, default_pk_d);
         EXPECT_EQ(default_addr_2, default_addr_3);
         EXPECT_EQ(default_addr, default_addr_3);
     }
@@ -98,13 +98,13 @@ TEST(keystore_tests, sapling_keys) {
 
 TEST(keystore_tests, store_and_retrieve_spending_key) {
     CBasicKeyStore keyStore;
-    libzcash::SproutSpendingKey skOut;
+    libzice::SproutSpendingKey skOut;
 
-    std::set<libzcash::SproutPaymentAddress> addrs;
+    std::set<libzice::SproutPaymentAddress> addrs;
     keyStore.GetSproutPaymentAddresses(addrs);
     EXPECT_EQ(0, addrs.size());
 
-    auto sk = libzcash::SproutSpendingKey::random();
+    auto sk = libzice::SproutSpendingKey::random();
     auto addr = sk.address();
 
     // Sanity-check: we can't get a key we haven't added
@@ -125,7 +125,7 @@ TEST(keystore_tests, store_and_retrieve_note_decryptor) {
     CBasicKeyStore keyStore;
     ZCNoteDecryption decOut;
 
-    auto sk = libzcash::SproutSpendingKey::random();
+    auto sk = libzice::SproutSpendingKey::random();
     auto addr = sk.address();
 
     EXPECT_FALSE(keyStore.GetNoteDecryptor(addr, decOut));
@@ -137,11 +137,11 @@ TEST(keystore_tests, store_and_retrieve_note_decryptor) {
 
 TEST(keystore_tests, StoreAndRetrieveViewingKey) {
     CBasicKeyStore keyStore;
-    libzcash::SproutViewingKey vkOut;
-    libzcash::SproutSpendingKey skOut;
+    libzice::SproutViewingKey vkOut;
+    libzice::SproutSpendingKey skOut;
     ZCNoteDecryption decOut;
 
-    auto sk = libzcash::SproutSpendingKey::random();
+    auto sk = libzice::SproutSpendingKey::random();
     auto vk = sk.viewing_key();
     auto addr = sk.address();
 
@@ -155,7 +155,7 @@ TEST(keystore_tests, StoreAndRetrieveViewingKey) {
     EXPECT_FALSE(keyStore.GetNoteDecryptor(addr, decOut));
 
     // and we can't find it in our list of addresses
-    std::set<libzcash::SproutPaymentAddress> addresses;
+    std::set<libzice::SproutPaymentAddress> addresses;
     keyStore.GetSproutPaymentAddresses(addresses);
     EXPECT_FALSE(addresses.count(addr));
 
@@ -195,9 +195,9 @@ TEST(keystore_tests, StoreAndRetrieveViewingKey) {
 // Sapling
 TEST(keystore_tests, StoreAndRetrieveSaplingSpendingKey) {
     CBasicKeyStore keyStore;
-    libzcash::SaplingExtendedSpendingKey skOut;
-    libzcash::SaplingFullViewingKey fvkOut;
-    libzcash::SaplingIncomingViewingKey ivkOut;
+    libzice::SaplingExtendedSpendingKey skOut;
+    libzice::SaplingFullViewingKey fvkOut;
+    libzice::SaplingIncomingViewingKey ivkOut;
 
     auto sk = GetTestMasterSaplingSpendingKey();
     auto fvk = sk.expsk.full_viewing_key();
@@ -280,7 +280,7 @@ TEST(keystore_tests, StoreAndRetrieveHDSeedInEncryptedStore) {
     TestCCryptoKeyStore keyStore2;
 
     // Add a Sprout address so the wallet has something to test when decrypting
-    ASSERT_TRUE(keyStore2.AddSproutSpendingKey(libzcash::SproutSpendingKey::random()));
+    ASSERT_TRUE(keyStore2.AddSproutSpendingKey(libzice::SproutSpendingKey::random()));
 
     ASSERT_TRUE(keyStore2.EncryptKeys(vMasterKey));
     ASSERT_TRUE(keyStore2.Unlock(vMasterKey));
@@ -299,12 +299,12 @@ TEST(keystore_tests, store_and_retrieve_spending_key_in_encrypted_store) {
     TestCCryptoKeyStore keyStore;
     uint256 r {GetRandHash()};
     CKeyingMaterial vMasterKey (r.begin(), r.end());
-    libzcash::SproutSpendingKey keyOut;
+    libzice::SproutSpendingKey keyOut;
     ZCNoteDecryption decOut;
-    std::set<libzcash::SproutPaymentAddress> addrs;
+    std::set<libzice::SproutPaymentAddress> addrs;
 
     // 1) Test adding a key to an unencrypted key store, then encrypting it
-    auto sk = libzcash::SproutSpendingKey::random();
+    auto sk = libzice::SproutSpendingKey::random();
     auto addr = sk.address();
     EXPECT_FALSE(keyStore.GetNoteDecryptor(addr, decOut));
 
@@ -341,7 +341,7 @@ TEST(keystore_tests, store_and_retrieve_spending_key_in_encrypted_store) {
     ASSERT_EQ(1, addrs.count(addr));
 
     // 2) Test adding a spending key to an already-encrypted key store
-    auto sk2 = libzcash::SproutSpendingKey::random();
+    auto sk2 = libzice::SproutSpendingKey::random();
     auto addr2 = sk2.address();
     EXPECT_FALSE(keyStore.GetNoteDecryptor(addr2, decOut));
 

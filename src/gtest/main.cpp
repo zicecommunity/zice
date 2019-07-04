@@ -2,7 +2,7 @@
 #include "crypto/common.h"
 #include "key.h"
 #include "pubkey.h"
-#include "zcash/JoinSplit.hpp"
+#include "zice/JoinSplit.hpp"
 #include "util.h"
 
 #include <libsnark/common/default_types/r1cs_ppzksnark_pp.hpp>

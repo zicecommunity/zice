@@ -9,8 +9,8 @@
 #include "serialize.h"
 #include "streams.h"
 #include "support/allocators/secure.h"
-#include "zcash/Address.hpp"
-#include "zcash/zip32.h"
+#include "zice/Address.hpp"
+#include "zice/zip32.h"
 
 class uint256;
 
@@ -209,11 +209,11 @@ public:
         }
     }
     virtual bool AddCryptedSproutSpendingKey(
-        const libzcash::SproutPaymentAddress &address,
-        const libzcash::ReceivingKey &rk,
+        const libzice::SproutPaymentAddress &address,
+        const libzice::ReceivingKey &rk,
         const std::vector<unsigned char> &vchCryptedSecret);
-    bool AddSproutSpendingKey(const libzcash::SproutSpendingKey &sk);
-    bool HaveSproutSpendingKey(const libzcash::SproutPaymentAddress &address) const
+    bool AddSproutSpendingKey(const libzice::SproutSpendingKey &sk);
+    bool HaveSproutSpendingKey(const libzice::SproutPaymentAddress &address) const
     {
         {
             LOCK(cs_SpendingKeyStore);
@@ -223,8 +223,8 @@ public:
         }
         return false;
     }
-    bool GetSproutSpendingKey(const libzcash::SproutPaymentAddress &address, libzcash::SproutSpendingKey &skOut) const;
-    void GetSproutPaymentAddresses(std::set<libzcash::SproutPaymentAddress> &setAddress) const
+    bool GetSproutSpendingKey(const libzice::SproutPaymentAddress &address, libzice::SproutSpendingKey &skOut) const;
+    void GetSproutPaymentAddresses(std::set<libzice::SproutPaymentAddress> &setAddress) const
     {
         if (!IsCrypted())
         {
@@ -241,13 +241,13 @@ public:
     }
     //! Sapling 
     virtual bool AddCryptedSaplingSpendingKey(
-        const libzcash::SaplingExtendedFullViewingKey &extfvk,
+        const libzice::SaplingExtendedFullViewingKey &extfvk,
         const std::vector<unsigned char> &vchCryptedSecret,
-        const libzcash::SaplingPaymentAddress &defaultAddr);
+        const libzice::SaplingPaymentAddress &defaultAddr);
     bool AddSaplingSpendingKey(
-        const libzcash::SaplingExtendedSpendingKey &sk,
-        const libzcash::SaplingPaymentAddress &defaultAddr);
-    bool HaveSaplingSpendingKey(const libzcash::SaplingFullViewingKey &fvk) const
+        const libzice::SaplingExtendedSpendingKey &sk,
+        const libzice::SaplingPaymentAddress &defaultAddr);
+    bool HaveSaplingSpendingKey(const libzice::SaplingFullViewingKey &fvk) const
     {
         {
             LOCK(cs_SpendingKeyStore);
@@ -261,7 +261,7 @@ public:
         }
         return false;
     }
-    bool GetSaplingSpendingKey(const libzcash::SaplingFullViewingKey &fvk, libzcash::SaplingExtendedSpendingKey &skOut) const;
+    bool GetSaplingSpendingKey(const libzice::SaplingFullViewingKey &fvk, libzice::SaplingExtendedSpendingKey &skOut) const;
 
 
     /**

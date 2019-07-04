@@ -6,6 +6,10 @@ src/zcashd
 src/zcash-cli
 src/zcash-gtest
 src/zcash-tx
+src/ziced
+src/zice-cli
+src/zice-gtest
+src/zice-tx
 src/test/test_bitcoin
 
 *zcashTest.pk

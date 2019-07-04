@@ -18,7 +18,7 @@
 #include <map>
 
 #include <boost/test/unit_test.hpp>
-#include "zcash/IncrementalMerkleTree.hpp"
+#include "zice/IncrementalMerkleTree.hpp"
 
 namespace
 {
@@ -252,10 +252,10 @@ public:
 
 uint256 appendRandomSproutCommitment(SproutMerkleTree &tree)
 {
-    libzcash::SproutSpendingKey k = libzcash::SproutSpendingKey::random();
-    libzcash::SproutPaymentAddress addr = k.address();
+    libzice::SproutSpendingKey k = libzice::SproutSpendingKey::random();
+    libzice::SproutPaymentAddress addr = k.address();
 
-    libzcash::SproutNote note(addr.a_pk, 0, uint256(), uint256());
+    libzice::SproutNote note(addr.a_pk, 0, uint256(), uint256());
 
     auto cm = note.cm();
     tree.append(cm);
