@@ -885,7 +885,7 @@ UniValue getblocksubsidy(const UniValue& params, bool fHelp)
     CAmount nReward = GetBlockSubsidy(nHeight, Params().GetConsensus());
     CAmount nFoundersReward = 0;
     if ((nHeight > 0) && (nHeight <= Params().GetConsensus().GetLastFoundersRewardBlockHeight())) {
-        nFoundersReward = nReward/5;
+        nFoundersReward = nReward/10;
         nReward -= nFoundersReward;
     }
     UniValue result(UniValue::VOBJ);

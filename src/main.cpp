@@ -3882,7 +3882,7 @@ bool ContextualCheckBlock(
 
         BOOST_FOREACH(const CTxOut& output, block.vtx[0].vout) {
             if (output.scriptPubKey == chainparams.GetFoundersRewardScriptAtHeight(nHeight)) {
-                if (output.nValue == (GetBlockSubsidy(nHeight, consensusParams) / 5)) {
+                if (output.nValue == (GetBlockSubsidy(nHeight, consensusParams) / 10)) {
                     found = true;
                     break;
                 }
