@@ -530,7 +530,8 @@ libzice_a_SOURCES = \
   zice/circuit/merkle.tcc \
   zice/circuit/note.tcc \
   zice/circuit/prfs.tcc \
-  zice/circuit/utils.tcc
+  zice/circuit/utils.tcc \
+  zice/delay.cpp
 
 libzice_a_CPPFLAGS = $(AM_CPPFLAGS) $(PIC_FLAGS) -DBINARY_OUTPUT -DCURVE_ALT_BN128 -DBOOST_SPIRIT_THREADSAFE -fvisibility=hidden -DSTATIC $(BITCOIN_INCLUDES)
 libzice_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)

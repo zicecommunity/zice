@@ -75,6 +75,7 @@ testScripts=(
     'finalsaplingroot.py'
     'sprout_sapling_migration.py'
     'turnstile.py'
+    'blockdelay.py'
 );
 testScriptsExt=(
     'getblocktemplate_longpoll.py'
