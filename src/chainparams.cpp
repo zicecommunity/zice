@@ -375,11 +375,12 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, consensus.hashGenesisBlock),
-            1549122056,  // * UNIX timestamp of last checkpoint block
-            47163,       // * total number of transactions between genesis and last checkpoint
+            (0, consensus.hashGenesisBlock)
+            (4330, uint256S("0x00624f55ac330407005ef6db7ae0e3b8add662a78a049e0928c7e5330e6df6da")),
+            1564688989,  // * UNIX timestamp of last checkpoint block
+            4331,       // * total number of transactions between genesis and last checkpoint
                          //   (the tx=... number in the SetBestChain debug.log lines)
-            715          //   total number of tx / (checkpoint block height / (24 * 24))
+            1440          //   total number of tx / (checkpoint block height / (24 * 24))
         };
 
         // Hardcoded fallback value for the Sprout shielded value pool balance
